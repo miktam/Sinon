@@ -9,18 +9,30 @@ var Person = {
   }
 }
 
-describe('print', function() {
+describe('No sinon - just how it works normally', function() {
   it('just printing', function() {
-   
-    Person.sayHi('dude').should.equal('hey, dude')
-     console.log(Person.sayHi('dude'))
+    Person.sayHi('Andrei').should.equal('hey, Andrei')
   })
 })
 
-describe('Person', function() {
-  describe('#sayHi', function() {
+describe('Replace existing method', function() {
+  describe('by stub', function() {
+
+    var newHi = function(say) {
+        return say + ' from new method'
+      }
+
+    it('replaces method by newHi', sinon.test(function() {
+      this.stub(Person, 'sayHi', newHi)
+      Person.sayHi('Call').should.equal('Call from new method')
+    }))
+  })
+})
+
+describe('Replace return', function() {
+  describe('from Person.sayHi', function() {
     it('says hola', sinon.test(function() {
-      this.stub(Person, 'sayHi').returns('hola')     
+      this.stub(Person, 'sayHi').returns('hola')
       Person.sayHi('Andrei').should.equal('hola')
     }))
 
@@ -31,12 +43,11 @@ describe('Person', function() {
   })
 })
 
-describe('spy on existing method', function() {
+describe('Spy on existing method', function() {
   it('shall check argument', sinon.test(function() {
 
     sinon.spy(Person, 'sayHi')
     var said = Person.sayHi('again')
-    console.log(said)
 
     assert(Person.sayHi.called)
     // alternatives
@@ -55,4 +66,3 @@ describe('spy on existing method', function() {
 
   }))
 })
-
